@@ -1,0 +1,10 @@
+{application, multiaddr,
+ [{description, "An Erlang implementation of multiaddr"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {applications,
+   [kernel,
+    stdlib
+   ]},
+  {env,[]}
+ ]}.
