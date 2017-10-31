@@ -6,9 +6,9 @@ before_install:
   - pip install --user cpp-coveralls coveralls-merge
 
 install:
-  - rebar get-deps
+  - ./rebar3 get-deps
 
-script: rebar compile xref && rebar skip_deps=true eunit
+script: ./rebar3 compile xref && ./rebar3 skip_deps=true eunit
 
 otp_release:
   - 20.1
