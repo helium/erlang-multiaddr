@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/helium/erlang-multiaddr.svg?branch=master)](https://travis-ci.org/helium/erlang-multiaddr)
+
 # erlang-multiaddr
 
 An Lang implementation for [multiaddr](https://github.com/multiformats/multiaddr). 
