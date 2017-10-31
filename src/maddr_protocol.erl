@@ -20,6 +20,7 @@
 
 -export_type([protocol/0]).
 
+-ignore_xref({new,4}).
 
 -export([new/4, for_name/1, for_code/1]).
 

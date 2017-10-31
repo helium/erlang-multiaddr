@@ -20,6 +20,9 @@
 
 -export_type([multiaddr/0]).
 
+-ignore_xref({new,1}).
+-ignore_xref({to_string,1}).
+
 -export([new/1, to_string/1]).
 
 -spec new(string() | binary()) -> multiaddr() | {error, term()}.
