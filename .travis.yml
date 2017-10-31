@@ -8,7 +8,7 @@ before_install:
 install:
   - ./rebar3 get-deps
 
-script: ./rebar3 compile xref && ./rebar3 skip_deps=true eunit
+script: ./rebar3 compile xref && ./rebar3 eunit
 
 otp_release:
   - 20.1
