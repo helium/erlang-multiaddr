@@ -23,7 +23,7 @@
 -ignore_xref({new,1}).
 -ignore_xref({to_string,1}).
 
--export([new/1, to_string/1]).
+-export([new/1, to_string/1, protocols/1]).
 
 -spec new(string() | binary()) -> multiaddr() | {error, term()}.
 new(Bin) when is_binary(Bin) ->
@@ -50,6 +50,38 @@ to_string(Addr) ->
         throw:{error, Error} -> {error, Error}
     end.
 
+-spec protocols(multiaddr()) -> [{string(), string() | undefined}] | {error, term()}.
+protocols(Addr) ->
+    try
+        protocols(Addr, [])
+    catch
+        throw:{error, Error} -> {error, Error}
+    end.
+
+protocols(<<>>, Acc) ->
+    Acc;
+protocols(Bytes, Acc) ->
+    {Code, Tail} = small_ints:decode_varint(Bytes),
+    case maddr_protocol:for_code(Code) of
+        #protocol{name=Name, size=Size, path=Path,
+                  transcoder=#transcoder{decode=Decode}} when not Path andalso Size > 0 ->
+            <<EncodedAddress:Size/bitstring, Rest/binary>> = Tail,
+            [{Name, Decode(EncodedAddress) } | protocols(Rest, Acc)];
+        #protocol{name=Name, size=Size, path=Path,
+                  transcoder=#transcoder{decode=Decode}} when not Path andalso Size < 0 ->
+            {EncodedSize, Tail1} = small_ints:decode_varint(Tail),
+            case Tail1 of
+                <<EncodedAddress:EncodedSize/binary, Remainder/binary>> ->
+                    [{Name, Decode(EncodedAddress)} | protocols(Remainder, Acc)];
+                _ -> throw({error, {invalid_address_lengh, EncodedSize}})
+            end;
+        #protocol{name=Name, path=Path, transcoder=#transcoder{decode=Decode}} when Path ->
+            [{Name, Decode(Tail)}];
+        #protocol{name=Name, size=Size} when Size == 0 ->
+            [{Name, undefined} | protocols(Tail, Acc)];
+        {error, Error} ->
+            throw({error, Error})
+    end.
 
 encode_string([], Acc) ->
     Acc;
