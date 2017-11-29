@@ -17,8 +17,9 @@
 -include("maddr_protocol.hrl").
 
 -opaque multiaddr() :: binary().
+-type protocol() :: {string(), string() | undefined}.
 
--export_type([multiaddr/0]).
+-export_type([multiaddr/0, protocol/0]).
 
 -ignore_xref({new,1}).
 -ignore_xref({to_string,1}).
@@ -42,15 +43,21 @@ new(Str) ->
         throw:{error, Error} -> {error, Error}
     end.
 
--spec to_string(multiaddr()) -> string() | {error, term()}.
-to_string(Addr) ->
+-spec to_string(multiaddr() | [protocol()]) -> string() | {error, term()}.
+to_string(Addr) when is_binary(Addr) ->
     try
         decode_bytes(Addr, "")
     catch
         throw:{error, Error} -> {error, Error}
+    end;
+to_string(Protocols) when is_list(Protocols) ->
+    try
+        decode_protocols(Protocols)
+    catch
+        throw:{error, Error} -> {error, Error}
     end.
 
--spec protocols(multiaddr()) -> [{string(), string() | undefined}] | {error, term()}.
+-spec protocols(multiaddr()) -> [protocol()] | {error, term()}.
 protocols(Addr) ->
     try
         protocols(Addr, [])
@@ -63,6 +70,7 @@ protocols(<<>>, Acc) ->
 protocols(Bytes, Acc) ->
     {Code, Tail} = small_ints:decode_varint(Bytes),
     case maddr_protocol:for_code(Code) of
+
         #protocol{name=Name, size=Size, path=Path,
                   transcoder=#transcoder{decode=Decode}} when not Path andalso Size > 0 ->
             <<EncodedAddress:Size/bitstring, Rest/binary>> = Tail,
@@ -130,4 +138,10 @@ decode_bytes(Bytes, Acc) ->
             throw({error, Error})
     end.
 
+decode_protocols([]) ->
+    "";
+decode_protocols([{Addr, undefined} | Rest]) ->
+    "/" ++ [Addr] ++ decode_protocols(Rest);
+decode_protocols([{Addr, Value} | Rest]) ->
+    "/" ++ [Addr] ++ "/" ++ Value ++ decode_protocols(Rest).
 

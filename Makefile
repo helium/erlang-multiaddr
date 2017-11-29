@@ -19,11 +19,14 @@ clean:
 	$(REBAR) clean
 	$(REBAR) as prod clean
 
-cover: test
+cover:
 	$(REBAR) cover
 
-test: compile
+test:
 	$(REBAR) eunit
+
+shell:
+	$(REBAR) shell
 
 typecheck:
 	$(REBAR) dialyzer

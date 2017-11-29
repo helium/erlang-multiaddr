@@ -95,6 +95,6 @@ protocols_test() ->
     Address = multiaddr:new("/ip4/127.0.0.1/udp/1234"),
     Protocols = multiaddr:protocols(Address),
     ?assertEqual(2, length(Protocols)),
-    ?assertMatch([{"ip4", "127.0.0.1"}, {"udp", "1234"}], Protocols).
-    
+    ?assertMatch([{"ip4", "127.0.0.1"}, {"udp", "1234"}], Protocols),
+    ?assertEqual(Address, multiaddr:new(multiaddr:to_string(Protocols))).
     
