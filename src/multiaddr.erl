@@ -141,7 +141,7 @@ decode_bytes(Bytes, Acc) ->
 decode_protocols([]) ->
     "";
 decode_protocols([{Addr, undefined} | Rest]) ->
-    "/" ++ [Addr] ++ decode_protocols(Rest);
+    "/" ++ Addr ++ decode_protocols(Rest);
 decode_protocols([{Addr, Value} | Rest]) ->
-    "/" ++ [Addr] ++ "/" ++ Value ++ decode_protocols(Rest).
+    "/" ++ Addr ++ "/" ++ Value ++ decode_protocols(Rest).
 
