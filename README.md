@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/helium/erlang-multiaddr.svg?branch=master)](https://travis-ci.org/helium/erlang-multiaddr)
+[![Coverage Status](https://coveralls.io/repos/github/helium/erlang-multiaddr/badge.svg?branch=master)](https://coveralls.io/github/helium/erlang-multiaddr?branch=master)
 
 # erlang-multiaddr
 
