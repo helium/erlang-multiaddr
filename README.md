@@ -3,7 +3,7 @@
 
 # erlang-multiaddr
 
-An Lang implementation for [multiaddr](https://github.com/multiformats/multiaddr). 
+An Erlang implementation for [multiaddr](https://github.com/multiformats/multiaddr). 
 
 ## Usage
 
