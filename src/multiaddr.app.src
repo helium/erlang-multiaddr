@@ -13,10 +13,10 @@
 %% limitations under the License.
 
 {application, multiaddr,
- [{description, "An Erlangng implementation of multiaddr"},
+ [{description, "An Erlang implementation of multiaddr"},
   {vsn, "0.1.0"},
   {registered, []},
-  {applications, [kernel, stdlib]},
+  {applications, [kernel, stdlib, base58, base32, small_ints]},
   {env,[]},
 
   %% hex.pm packaging:
