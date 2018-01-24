@@ -26,13 +26,8 @@
 
 -export([new/1, to_string/1, protocols/1]).
 
--spec new(string() | binary()) -> multiaddr() | {error, term()}.
-new(Bin) when is_binary(Bin) ->
-    case to_string(Bin) of
-        Result when is_list(Result) -> Bin;
-        Error -> Error
-    end;
-new(Str) ->
+-spec new(string()) -> multiaddr().
+new(Str) when is_list(Str) ->
     Trimmed = string:strip(Str, right, $/),
     try
         case string:split(Trimmed, "/", all) of
@@ -40,29 +35,29 @@ new(Str) ->
             _ -> throw({error, missing_prefix})
         end
     catch
-        throw:{error, Error} -> {error, Error}
+        throw:{error, _} -> error(bad_arg)
     end.
 
--spec to_string(multiaddr() | [protocol()]) -> string() | {error, term()}.
+-spec to_string(multiaddr() | [protocol()]) -> string().
 to_string(Addr) when is_binary(Addr) ->
     try
         decode_bytes(Addr, "")
     catch
-        throw:{error, Error} -> {error, Error}
+        throw:{error, _} -> error(bad_arg)
     end;
 to_string(Protocols) when is_list(Protocols) ->
     try
         decode_protocols(Protocols)
     catch
-        throw:{error, Error} -> {error, Error}
+        throw:{error, _} -> error(bad_arg)
     end.
 
--spec protocols(multiaddr()) -> [protocol()] | {error, term()}.
+-spec protocols(multiaddr()) -> [protocol()].
 protocols(Addr) ->
     try
         protocols(Addr, [])
     catch
-        throw:{error, Error} -> {error, Error}
+        throw:{error, _} -> error(bad_arg)
     end.
 
 protocols(<<>>, Acc) ->
@@ -144,4 +139,3 @@ decode_protocols([{Addr, undefined} | Rest]) ->
     "/" ++ Addr ++ decode_protocols(Rest);
 decode_protocols([{Addr, Value} | Rest]) ->
     "/" ++ Addr ++ "/" ++ Value ++ decode_protocols(Rest).
-
