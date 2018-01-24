@@ -16,7 +16,7 @@
 
 -include("maddr_protocol.hrl").
 
--opaque multiaddr() :: binary().
+-type multiaddr() :: binary().
 -type protocol() :: {string(), string() | undefined}.
 
 -export_type([multiaddr/0, protocol/0]).
