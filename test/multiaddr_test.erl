@@ -73,7 +73,7 @@ encode_fail_test() ->
              "/ip4/1.2.3.4/tcp/80/unix"
             ],
     lists:map(fun(Case) ->
-                      ?assertMatch({error, _}, multiaddr:new(Case))
+                      ?assertError(bad_arg, multiaddr:new(Case))
               end, Cases).
 
 
@@ -81,13 +81,13 @@ encode_binary_test() ->
     Cases = [ {"/ip4/127.0.0.1/udp/1234", "047f000001910204d2"},
               {"/ip4/127.0.0.1/tcp/4321", "047f0000010610e1"},
               {"/ip4/127.0.0.1/udp/1234/ip4/127.0.0.1/tcp/4321", "047f000001910204d2047f0000010610e1"},
-              {"/onion/aaimaq4ygg2iegci:80", "bc030010c0439831b48218480050"} 
+              {"/onion/aaimaq4ygg2iegci:80", "bc030010c0439831b48218480050"}
             ],
     lists:map(fun({Str, Enc}) ->
                       Address = multiaddr:new(Str),
                       Encoded = string:uppercase(Enc),
                       ?assertEqual(Encoded, hex:bin_to_hexstr(Address)),
-                      ?assertEqual(Address, multiaddr:new(hex:hexstr_to_bin(Enc)))
+                      ?assertEqual(Address, multiaddr:new(multiaddr:to_string(hex:hexstr_to_bin(Enc))))
               end, Cases).
 
 
@@ -97,4 +97,3 @@ protocols_test() ->
     ?assertEqual(2, length(Protocols)),
     ?assertMatch([{"ip4", "127.0.0.1"}, {"udp", "1234"}], Protocols),
     ?assertEqual(Address, multiaddr:new(multiaddr:to_string(Protocols))).
-    
