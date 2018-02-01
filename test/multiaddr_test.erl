@@ -86,8 +86,8 @@ encode_binary_test() ->
     lists:map(fun({Str, Enc}) ->
                       Address = multiaddr:new(Str),
                       Encoded = string:uppercase(Enc),
-                      ?assertEqual(Encoded, hex:bin_to_hexstr(Address)),
-                      ?assertEqual(Address, multiaddr:new(multiaddr:to_string(hex:hexstr_to_bin(Enc))))
+                      ?assertEqual(Encoded, bin_to_hexstr(Address)),
+                      ?assertEqual(Address, multiaddr:new(multiaddr:to_string(hexstr_to_bin(Enc))))
               end, Cases).
 
 
@@ -97,3 +97,21 @@ protocols_test() ->
     ?assertEqual(2, length(Protocols)),
     ?assertMatch([{"ip4", "127.0.0.1"}, {"udp", "1234"}], Protocols),
     ?assertEqual(Address, multiaddr:new(multiaddr:to_string(Protocols))).
+
+
+%% from http://necrobious.blogspot.com/2008/03/binary-to-hex-string-back-to-binary-in.html
+
+bin_to_hexstr(Bin) ->
+  lists:flatten([io_lib:format("~2.16.0B", [X]) ||
+    X <- binary_to_list(Bin)]).
+
+hexstr_to_bin(S) ->
+  hexstr_to_bin(S, []).
+hexstr_to_bin([], Acc) ->
+  list_to_binary(lists:reverse(Acc));
+hexstr_to_bin([X,Y|T], Acc) ->
+  {ok, [V], []} = io_lib:fread("~16u", [X,Y]),
+  hexstr_to_bin(T, [V | Acc]);
+hexstr_to_bin([X|T], Acc) ->
+  {ok, [V], []} = io_lib:fread("~16u", lists:flatten([X,"0"])),
+  hexstr_to_bin(T, [V | Acc]).

@@ -1,3 +1,4 @@
+{"1.1.0",
 [{<<"base32">>,
   {git,"https://github.com/aetrion/base32_erlang",
        {ref,"40431a7480176b24863e18b92d9872e54c714df5"}},
@@ -6,6 +7,7 @@
   {git,"https://github.com/mbrix/erl-base58",
        {ref,"dd22cf9fa475befb8258f4cf67d77484c0d7fd37"}},
   0},
+ {<<"erl_base58">>,{pkg,<<"erl_base58">>,<<"0.0.1">>},0},
  {<<"hex">>,
   {git,"https://github.com/b/hex",
        {ref,"967f059ea49e45b7d0d82e2e1177ef860f5ec4bd"}},
@@ -13,4 +15,8 @@
  {<<"small_ints">>,
   {git,"https://github.com/whatyouhide/small_ints",
        {ref,"c80501a65ed98ed7b9f03cd03c93641c2c5d6ef9"}},
-  0}].
+  0}]}.
+[
+{pkg_hash,[
+ {<<"erl_base58">>, <<"37710854461D71DF338E73C65776302DB41C4BAB4674D2EC134ED7BCFC7B5552">>}]}
+].
