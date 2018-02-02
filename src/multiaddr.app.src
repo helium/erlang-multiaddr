@@ -16,7 +16,7 @@
  [{description, "An Erlang implementation of multiaddr"},
   {vsn, "0.1.0"},
   {registered, []},
-  {applications, [kernel, stdlib, base58, base32, small_ints]},
+  {applications, [kernel, stdlib, erl_base58, base32, small_ints]},
   {env,[]},
 
   %% hex.pm packaging:
@@ -24,4 +24,3 @@
   {maintainers, ["Helium"]},
   {links, [{"Github", "https://github.com/helium/erlang-multiaddr"}]}
  ]}.
-
