@@ -22,20 +22,20 @@
 
 -export_type([transcoder/0, encoder/0, decoder/0]).
 
--export([ip4/0, ip6/0, port/0, ipfs/0, onion/0, unix/0]).
+-export([ip4/0, ip6/0, port/0, p2p/0, ipfs/0, onion/0, unix/0]).
 
 -spec mktr(encoder(), decoder()) -> transcoder().
 mktr(Encode, Decode) ->
     #transcoder{encode=Encode, decode=Decode}.
 
 encode_port(Str) ->
-    case string:to_integer(Str) of 
+    case string:to_integer(Str) of
         {Int, []} when Int >= 0 andalso Int < 65536 -> <<Int:16/big-unsigned-integer>>;
         _ -> throw({error, {invalid_port, Str}})
     end.
 
 decode_port(Bin) ->
-    case Bin of 
+    case Bin of
         <<Int:16/big-unsigned-integer>> -> integer_to_list(Int);
         _ -> throw({error, invalid_port})
     end.
@@ -67,7 +67,7 @@ port() ->
     mktr(fun encode_port/1, fun decode_port/1).
 
 
-ipfs() ->
+p2p() ->
     Encode = fun(Str) ->
                      Bin = case base58:check_base58(Str) of
                                true -> base58:base58_to_binary(Str);
@@ -79,6 +79,9 @@ ipfs() ->
                      base58:binary_to_base58(Bin)
              end,
     mktr(Encode, Decode).
+
+ipfs() ->
+    p2p().
 
 unix() ->
     Encode = fun(Str) ->
@@ -103,7 +106,7 @@ unix() ->
 
 onion() ->
     Encode = fun(Str) ->
-                     case string:split(Str, ":", all) of 
+                     case string:split(Str, ":", all) of
                          [AddrStr, PortStr] when length(AddrStr) == 16 ->
                              Addr = try
                                  base32:decode(string:uppercase(AddrStr))
@@ -115,9 +118,9 @@ onion() ->
                      end
              end,
     Decode = fun(Bin) ->
-                     case Bin of 
+                     case Bin of
                          <<Addr:10/binary, Port:16/big-unsigned-integer>> ->
-                              EncodedAddr = try 
+                              EncodedAddr = try
                                                 base32:encode(Addr, [lower, nopad])
                                             catch
                                                 error:_ -> throw({error, invalid_address})

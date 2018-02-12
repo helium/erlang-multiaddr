@@ -34,6 +34,7 @@
 -define(P_UDT  , 16#012D).
 -define(P_UTP  , 16#012E).
 -define(P_UNIX , 16#0190).
+-define(P_P2P  , 16#01A4).
 -define(P_IPFS , 16#01A5).
 -define(P_HTTP , 16#01E0).
 -define(P_HTTPS, 16#01BB).
@@ -82,6 +83,7 @@ supported() ->
      #protocol{name="quic",  code=?P_QUIC,   size=0,   transcoder=undefined},
      #protocol{name="http",  code=?P_HTTP,   size=0,   transcoder=undefined},
      #protocol{name="https", code=?P_HTTPS,  size=0,   transcoder=undefined},
+     #protocol{name="p2p",   code=?P_P2P ,   size=-1,  transcoder=maddr_transcoder:p2p()},
      #protocol{name="ipfs",  code=?P_IPFS,   size=-1,  transcoder=maddr_transcoder:ipfs()},
      #protocol{name="unix",  code=?P_UNIX,   size=-1,  transcoder=maddr_transcoder:unix(), path=true}
     ].
