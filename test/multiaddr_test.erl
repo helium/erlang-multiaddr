@@ -38,6 +38,8 @@ encode_success_test() ->
              "/unix/stdio",
              "/ip4/1.2.3.4/tcp/80/unix/a/b/c/d/e/f",
              "/ip4/127.0.0.1/ipfs/QmcgpsyWgH8Y8ajJz1Cu72KnS5uo2Aa2LpzU7kinSupNKC/tcp/1234/unix/stdio"
+             "/ip4/1.2.3.4/tcp/80/p2p-circuit/a/b/c/d/e/f",
+             "/ip4/1.2.3.4/tcp/80/p2p-circuit/ip4/1.2.3.4/tcp/80"
             ],
     lists:map(fun(Case) ->
                       Address = multiaddr:new(Case),
