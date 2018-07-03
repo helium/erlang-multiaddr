@@ -39,6 +39,7 @@
 -define(P_HTTP , 16#01E0).
 -define(P_HTTPS, 16#01BB).
 -define(P_ONION, 16#01BC).
+-define(P_P2P_CIRCUIT, 16#0122).
 
 -spec new(string(), pos_integer(), pos_integer(), transoders:transcoder()) -> protocol().
 new(Name, Code, Size, Transcoder) ->
@@ -85,5 +86,6 @@ supported() ->
      #protocol{name="https", code=?P_HTTPS,  size=0,   transcoder=undefined},
      #protocol{name="p2p",   code=?P_P2P ,   size=-1,  transcoder=maddr_transcoder:p2p()},
      #protocol{name="ipfs",  code=?P_IPFS,   size=-1,  transcoder=maddr_transcoder:ipfs()},
-     #protocol{name="unix",  code=?P_UNIX,   size=-1,  transcoder=maddr_transcoder:unix(), path=true}
+     #protocol{name="unix",  code=?P_UNIX,   size=-1,  transcoder=maddr_transcoder:unix(), path=true},
+     #protocol{name="p2p-circuit", code=?P_P2P_CIRCUIT, size=-1, transcoder=maddr_transcoder:p2p_circuit(), path=true}
     ].
