@@ -52,7 +52,7 @@ to_string(Protocols) when is_list(Protocols) ->
         throw:{error, _} -> error(bad_arg)
     end.
 
--spec protocols(multiaddr()) -> [protocol()].
+-spec protocols(multiaddr() | string()) -> [protocol()].
 protocols(Addr) ->
     try
         protocols(Addr, [])
@@ -62,7 +62,7 @@ protocols(Addr) ->
 
 protocols(<<>>, Acc) ->
     Acc;
-protocols(Bytes, Acc) ->
+protocols(Bytes, Acc) when is_binary(Bytes) ->
     {Code, Tail} = small_ints:decode_varint(Bytes),
     case maddr_protocol:for_code(Code) of
 
@@ -84,7 +84,10 @@ protocols(Bytes, Acc) ->
             [{Name, undefined} | protocols(Tail, Acc)];
         {error, Error} ->
             throw({error, Error})
-    end.
+    end;
+protocols(Str, Acc) ->
+    protocols(multiaddr:new(Str), Acc).
+
 
 encode_string([], Acc) ->
     Acc;
